@@ -12,16 +12,19 @@ const PORT = process.env.PORT
 
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, '/public/')))
+app.use('/sessions', sessionRouter)
+// Everything that goes to sessions, we want to use the following "sessionRouter" which will hold ALL code to deal with session routes
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 //! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Configuration
 
 
 app.get('/', (req, res) => {
-    res.render('index', {
-        title: 'Welcome to Weyland Corp',
-        data: ['xeno', 'ecto', 'pheno']
-    });
+    res.render('index');
+})
+
+app.get('/sessions', (req, res) => {
+
 })
 
 //. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Paths
@@ -50,7 +53,7 @@ app.listen(PORT, () => {
 // __dirname - A variable from Node that results in "Where are you running from" for files < /Users/unicompare/Desktop/Node >
 
 // app.get - Sends responses back for GET requests
-// app.use - Middleware 
+// app.use - Allows use to USE a sepcific Middleware 
 // app.set - Allows us to set variables inside the context of our application
 
 /// PROCESS.ENV
