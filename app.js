@@ -8,23 +8,34 @@ import path from 'path';
 const app = express();
 const appDebug = debug('app');
 const __dirname = path.resolve();
-const PORT = process.env.PORT
+const PORT = process.env.PORT;
+const sessionRouter = express.Router();
 
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, '/public/')))
 app.use('/sessions', sessionRouter)
-// Everything that goes to sessions, we want to use the following "sessionRouter" which will hold ALL code to deal with session routes
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 //! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Configuration
 
+sessionRouter.route('/')
+    .get((req, res) => {
+        res.render('sessions', {
+            sessions: [
+                {title: 'Session 1', description: 'Session 1 includes a talk from: ', speaker: 'John Wayland'},
+                {title: 'Session 2', description: 'Session 2 includes a talk from: ', speaker: 'Stephen Root'},
+                {title: 'Session 3', description: 'Session 3 includes a talk from: ', speaker: 'Jimmy James'},
+                {title: 'Session 4', description: 'Session 4 includes a talk from: ', speaker: 'Arnold Palmer'},
+            ]
+        })
+    })
+
+// We use / due to already having specified the path that we're writing for ie: app.use('/sessions', sessionRouter)
+//| - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Routing
+
 
 app.get('/', (req, res) => {
     res.render('index');
-})
-
-app.get('/sessions', (req, res) => {
-
 })
 
 //. - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Paths
@@ -76,3 +87,18 @@ app.listen(PORT, () => {
     //@ app.set('view engine', 'ejs');
 
 // Now we have EXPRESS linking in './src/views' for templates associated with EJS
+
+
+/// ROUTER
+// Create a variable which holds an instance of the express router
+    //@ const sessionRouter = express.Router();
+
+// Everything that goes to sessions, we want to use the following "sessionRouter" which will hold ALL code to deal with session routes
+    //@ app.use('/sessions', sessionRouter)
+
+    
+// We use / due to already having specified the path that we're writing for ie: app.use('/sessions', sessionRouter)
+    //@ sessionRouter.route('/')
+    //@     .get((req, res) => {
+    //@         res.render('sessions')
+    //@     })
