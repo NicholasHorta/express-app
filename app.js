@@ -3,6 +3,7 @@ import chalk from 'chalk';
 import debug from 'debug';
 import morgan from 'morgan';
 import path from 'path';
+import sessions from './src/data/sessions.json'
 //$ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Importing
 
 const app = express();
@@ -20,14 +21,7 @@ app.set('view engine', 'ejs');
 
 sessionRouter.route('/')
     .get((req, res) => {
-        res.render('sessions', {
-            sessions: [
-                {title: 'Session 1', description: 'Session 1 includes a talk from: ', speaker: 'John Wayland'},
-                {title: 'Session 2', description: 'Session 2 includes a talk from: ', speaker: 'Stephen Root'},
-                {title: 'Session 3', description: 'Session 3 includes a talk from: ', speaker: 'Jimmy James'},
-                {title: 'Session 4', description: 'Session 4 includes a talk from: ', speaker: 'Arnold Palmer'},
-            ]
-        })
+        res.render('sessions', { sessions })
     })
 
 // We use / due to already having specified the path that we're writing for ie: app.use('/sessions', sessionRouter)
