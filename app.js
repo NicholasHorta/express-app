@@ -3,28 +3,23 @@ import chalk from 'chalk';
 import debug from 'debug';
 import morgan from 'morgan';
 import path from 'path';
-import sessions from './src/data/sessions.json'
+import sessionsRouter from './src/routers/sessionsRouter'
 //$ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Importing
 
 const app = express();
 const appDebug = debug('app');
 const __dirname = path.resolve();
 const PORT = process.env.PORT;
-const sessionRouter = express.Router();
+const sessionRx = sessionsRouter;
 
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, '/public/')))
-app.use('/sessions', sessionRouter)
+app.use('/sessions', sessionRx)
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 //! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Configuration
 
-sessionRouter.route('/')
-    .get((req, res) => {
-        res.render('sessions', { sessions })
-    })
 
-// We use / due to already having specified the path that we're writing for ie: app.use('/sessions', sessionRouter)
 //| - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Routing
 
 
@@ -95,4 +90,22 @@ app.listen(PORT, () => {
     //@ sessionRouter.route('/')
     //@     .get((req, res) => {
     //@         res.render('sessions')
+    //@     })
+
+// REQ.PARAMS will supply us with whatever we passed in under the dynamic parameter item
+// Dyn title must match the req.params item - but variable can be renamed
+    //. href="/sessions/<%= sess.id %>/<%= sess.room"
+    //@ sessionRouter.route('/:id/:room')
+    //@     .get((req, res) => {
+    //@         const id = req.params.id
+    //@         const cfRoom = req.params.room
+    //@         res.send('sessions id: ' + id + ' ---- ' + cfRoom)
+    //@     })
+// Use the REQ.PARAMS to access a value which we can reference in the main data
+// The specific item within the main data can then be passed onto SINGLE page through it's own properties
+// The data is passed the same as variable data assignment NEW-STORAGE <-- VALUE
+    //@ sessionRouter.route('/:id')
+    //@     .get((req, res) => {
+    //@         const id = req.params.id
+    //@         res.render('singleSession', { singlePageProps: mainDataSrc[id] })
     //@     })
