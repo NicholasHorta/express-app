@@ -4,6 +4,7 @@ import debug from 'debug';
 import morgan from 'morgan';
 import path from 'path';
 import sessionsRouter from './src/routers/sessionsRouter'
+import adminRouter from './src/routers/adminRouter';
 //$ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Importing
 
 const app = express();
@@ -11,10 +12,12 @@ const appDebug = debug('app');
 const __dirname = path.resolve();
 const PORT = process.env.PORT;
 const sessionRx = sessionsRouter;
+const adminRx = adminRouter;
 
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, '/public/')))
-app.use('/sessions', sessionRx)
+app.use('/sessions', sessionRx);
+app.use('/admin', adminRx);
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
 //! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Configuration
