@@ -19,14 +19,14 @@ export default function localStrategy(){
     );
 }
 
-/// Strategy
+/// STRATEGY
 // STRATEGY will handle authentication requests
 // Since we will be keeping everything local, we will implement: The Local Strategy
 // Basically means that the user will provide a UN and PW
 // And we will figure out whether or not they are authenticated locally, using our own codebase 
 
 
-/// Passport local -- Need to install this
+/// PASSPORT LOCAL -- Need to install this
 // This will return us an Object - {}
 // And from that Object we want - Strategy
     //@ import { Strategy } from 'passport-local';

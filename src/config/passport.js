@@ -25,7 +25,7 @@ export default function passportConfig(exe) { // param can be called anything we
 }
 
 
-/// Sessions
+/// SESSIONS
 // Password will maintain the login sessions
 // As our REQUEST is loaded it will deserialize the user and add that user to the session
 // Once the session is done, it will serialise the user back
@@ -35,5 +35,5 @@ export default function passportConfig(exe) { // param can be called anything we
     //: serialize => { John, Qwe23! } >>> {011011101001, 100111010110}
 
 
-/// Strategy
-// SEE ./strategies/local.strategy
+/// STRATEGY
+// SEE --> ./strategies/local.strategy
