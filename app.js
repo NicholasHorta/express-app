@@ -5,6 +5,8 @@ import morgan from 'morgan';
 import path from 'path';
 import sessionsRouter from './src/routers/sessionsRouter'
 import adminRouter from './src/routers/adminRouter';
+import authRouter from './src/routers/authRouter';
+
 //$ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Importing
 
 const app = express();
@@ -13,13 +15,19 @@ const __dirname = path.resolve();
 const PORT = process.env.PORT;
 const sessionRx = sessionsRouter;
 const adminRx = adminRouter;
+const authRx = authRouter;
 
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, '/public/')))
-app.use('/sessions', sessionRx);
-app.use('/admin', adminRx);
+app.use(express.json()); 
+app.use(express.urlencoded({extended: false}));
+
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
+
+app.use('/sessions', sessionRx);
+app.use('/admin', adminRx);
+app.use('/auth', authRx);
 //! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Configuration
 
 
@@ -112,3 +120,39 @@ app.listen(PORT, () => {
     //@         const id = req.params.id
     //@         res.render('singleSession', { singlePageProps: mainDataSrc[id] })
     //@     })
+
+
+
+/// POST
+// Used to use BodyParser but now we use express.json()
+    //@ app.use(express.json());
+// Followed by boilerplate code
+    //@ app.use(express.urlencoded({extended: false}));
+
+// We now have this object/function, and when a POST is sent through this REQUEST pipeline 
+// Application now has middleware that will interrupt as it's running through 
+// Will check if there is something on the BODY, pull it out using express.json() 
+// and whatever is returned, drop that back on the REQUEST as REQ.BODY
+
+    //@ authRouter.route('/signup')
+    //@     .post((req, res) => {
+    //@         res.json(req.body)
+    //@     })
+// Want to get access to the document body
+
+//: REMEMBER! - Order MATTERS!!!
+// So we need to establish our USE of express' initialisation (app)  
+// and it's objects/functions BEFORE our routes are established
+    //$ USE
+    //@ app.use(express.static(path.join(__dirname, '/public/')))
+    //@ app.use(express.json()); 
+    //@ app.use(express.urlencoded({extended: false}));
+
+    //$ Route
+    //@ app.use('/auth', authRx);
+
+
+
+/// PASSPORT
+// Handle all user authentication & authorization 
+// 
