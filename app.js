@@ -3,24 +3,39 @@ import chalk from 'chalk';
 import debug from 'debug';
 import morgan from 'morgan';
 import path from 'path';
-import sessionsRouter from './src/routers/sessionsRouter'
+import cookieParser from 'cookie-parser';
+import session from 'express-session';
+import passportModule from './src/config/passport';
+import sessionsRouter from './src/routers/sessionsRouter';
 import adminRouter from './src/routers/adminRouter';
 import authRouter from './src/routers/authRouter';
 
 //$ - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Importing
 
+
 const app = express();
 const appDebug = debug('app');
 const __dirname = path.resolve();
 const PORT = process.env.PORT;
-const sessionRx = sessionsRouter;
-const adminRx = adminRouter;
+
+//: Config
+const appCookieParser = cookieParser;
+const appSession = session;
+
+//: Routers
 const authRx = authRouter;
+const adminRx = adminRouter;
+const sessionRx = sessionsRouter;
+
 
 app.use(morgan('tiny'));
 app.use(express.static(path.join(__dirname, '/public/')))
 app.use(express.json()); 
 app.use(express.urlencoded({extended: false}));
+app.use(appCookieParser());
+app.use(appSession({ secret: '66F44EYZo0aqPZxZ'}));
+passportModule(app);
+
 
 app.set('views', './src/views');
 app.set('view engine', 'ejs');
@@ -64,7 +79,7 @@ app.listen(PORT, () => {
 // __dirname - A variable from Node that results in "Where are you running from" for files < /Users/unicompare/Desktop/Node >
 
 // app.get - Sends responses back for GET requests
-// app.use - Allows use to USE a sepcific Middleware 
+// app.use - Allows use to USE specific Middleware - USE function MUST flow in a specific order!
 // app.set - Allows us to set variables inside the context of our application
 
 /// PROCESS.ENV
@@ -155,4 +170,29 @@ app.listen(PORT, () => {
 
 /// PASSPORT
 // Handle all user authentication & authorization 
-// 
+// Passport deals with maintaining your USER object IN the SESSION
+// Does this by applying/updating cookies, sessions etc 
+// We also then require EXPRESS-SESSION and COOKIE-PARSER 
+// to store our cookies and session info
+
+    //@ import cookieParser from 'cookie-parser';
+    //@ import session from 'express-session';
+
+    //@ app.use(appCookieParser());
+    //@ app.use(appSession({ secret: '66F44EYZo0aqPZxZ'}));
+
+// session requires an object that contains a secret key in which we must provide a value for
+// Doesn't matter what the secret is, it's simply used to encode the cookie 
+
+
+// The USED middleware MUST be in the following order as Passport, before initialization,
+// REQUIRES, besides the others which DO matter, COOKIE-PARSER & SESSIONS to be established 
+    //@ app.use(morgan('tiny'));
+    //@ app.use(express.static(path.join(__dirname, '/public/')))
+    //@ app.use(express.json()); 
+    //@ app.use(express.urlencoded({extended: false}));
+    //@ app.use(appCookieParser());
+    //@ app.use(appSession({ secret: '66F44EYZo0aqPZxZ'}));
+    //@ passportModule(app);
+
+
