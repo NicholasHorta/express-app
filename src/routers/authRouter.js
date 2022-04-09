@@ -1,6 +1,7 @@
 import express from 'express';
 import debug from 'debug';
 import { MongoClient, ObjectId } from 'mongodb'
+import chalk from 'chalk';
 
 const authRouter = express.Router();
 const appDebug = debug('app:sessionRouter');
@@ -8,15 +9,32 @@ const appDebug = debug('app:sessionRouter');
 
 authRouter.route('/signup')
     .post((req, res) => {
-        // TODO create user
-        req.login(req.body, () => {
-            res.redirect('/auth/profile');
-        })
+        /// MAKING A USER
+        // First we need to get the UN & PW 
+        const { username, password } = req.body; // Destructuring
+        const url = 'mongodb+srv://nick:bH9cL32h7GrMHY5P@cluster0.9irb1.mongodb.net?retryWrites=true&w=majority';
+        const dbName = 'globomantics';
+        (async function addUser() {
+            let client;
+            try {
+                client = await MongoClient.connect(url);
+                const db = client.db(dbName);
+                const user = { username, password };
+                const results = await db.collection('users').insertOne(user);
+                appDebug(chalk.red(results.insertedId))
+                appDebug(results);// results is the 
+                req.login(results, () => {
+                    res.redirect('/auth/profile');
+                })
+            } catch (error) {
+                appDebug(error);
+            }
+            client.close();
+        })()
     })
 
 authRouter.route('/profile')
     .get((req, res) => {
-        //! add onto USER below
         res.json(req.user)
     })
 
