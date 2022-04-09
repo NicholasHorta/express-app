@@ -1,3 +1,4 @@
+console.log('APP.JS');
 import express from 'express';
 import chalk from 'chalk';
 import debug from 'debug';
@@ -5,6 +6,7 @@ import morgan from 'morgan';
 import path from 'path';
 import cookieParser from 'cookie-parser';
 import session from 'express-session';
+
 import passportModule from './src/config/passport';
 import sessionsRouter from './src/routers/sessionsRouter';
 import adminRouter from './src/routers/adminRouter';
@@ -34,6 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: false}));
 app.use(appCookieParser());
 app.use(appSession({ secret: '66F44EYZo0aqPZxZ'}));
+console.log("PassportModule about to execute...");
 passportModule(app);
 
 

@@ -1,19 +1,20 @@
-
 import passport from 'passport';
 import { Strategy } from 'passport-local';
 
 export default function localStrategy(){
     passport.use(
-        new Strategy(
+            new Strategy(
             {
-                usernameField: 'username',
-                passwordField: 'password'
+                usernameField: 'usernameSignIn',
+                passwordField: 'passwordSignIn'
             }, (username, password, done) => {
                 const user = {
                     username,
                     password,
-                    'name': 'Jonathan'
+                    'name': username,
+                    'admin': false
                 };
+            console.log(user, ' -- Created USER OBJECT and sending to PASSPORT.JS')
             done(null, user);
         })
     );
@@ -24,6 +25,7 @@ export default function localStrategy(){
 // Since we will be keeping everything local, we will implement: The Local Strategy
 // Basically means that the user will provide a UN and PW
 // And we will figure out whether or not they are authenticated locally, using our own codebase 
+//! All this is doing is CREATING a USER OBJECT, it's NOT authorizing a sign in. Just creating the Object.
 
 
 /// PASSPORT LOCAL -- Need to install this
@@ -40,7 +42,7 @@ export default function localStrategy(){
     
 
 // The Local Strategy - new Strategy constructor takes 2 pieces of information 
-// 1: {}    - with 2 pieces of info: UN and PW, (and any other info we want to add) and tell it what the fields are called in our DOCUMENT
+// 1: {}    - with 2 pieces of info: UN and PW, (and any other info we want to add) and tell it what the fields are called in our DOCUMENT FORM: name ATTR 
 // 2: ()    - Then we'll send these items to this function, along with the DONE callback,
 //          - Within the () call, we'll take the UN and PW, go to a DB, lookup user, validate pw
 //          - Then create a USER object out of that information 

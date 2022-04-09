@@ -1,11 +1,12 @@
 import express from 'express';
 import debug from 'debug';
-import { MongoClient, ObjectId } from 'mongodb'
+import { MongoClient, ObjectId } from 'mongodb';
 import chalk from 'chalk';
-
+import passport from 'passport';
 const authRouter = express.Router();
 const appDebug = debug('app:sessionRouter');
 
+console.log('AUTHRX.JS'); 
 
 authRouter.route('/signup')
     .post((req, res) => {
@@ -22,7 +23,7 @@ authRouter.route('/signup')
                 const user = { username, password };
                 const results = await db.collection('users').insertOne(user);
                 appDebug(chalk.red(results.insertedId))
-                appDebug(results);// results is the 
+                appDebug(results);// { acknowledged, new ObjectId } - the Object returned from MongoDB success/failure 
                 req.login(results, () => {
                     res.redirect('/auth/profile');
                 })
@@ -32,6 +33,25 @@ authRouter.route('/signup')
             client.close();
         })()
     })
+
+/// GET & POST COMBO
+// We want both here, because once we GET signin, We SEND you to 'signin' page
+// THEN we chain on the POST request 
+// When we POST, we need a function that is executed in order to AUTHENTICATE
+// passport has a built in function to this 
+// and will RETURN a function handler FOR the POST REQUEST
+// function takes 2 params, 1: STRATEGY, 2: Object with 2 options
+    //: successRedirect - Where to redirect if successful
+    //: failureMessage - What to do/show if the op has failed
+
+authRouter.route('/signin')
+    .get((req, res) => {
+        res.render('signin')
+    })
+    .post(passport.authenticate('local', {
+        successRedirect: '/auth/profile',
+        failureMessage: '/'
+    }))
 
 authRouter.route('/profile')
     .get((req, res) => {
