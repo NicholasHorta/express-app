@@ -20,6 +20,29 @@ export default function localStrategy(){
     );
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /// STRATEGY
 // STRATEGY will handle authentication requests
 // Since we will be keeping everything local, we will implement: The Local Strategy
