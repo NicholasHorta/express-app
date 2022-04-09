@@ -1,5 +1,9 @@
 import passport from 'passport';
 import { Strategy } from 'passport-local';
+import { MongoClient } from 'mongodb';
+import debug from 'debug';
+
+const appDebug = debug('app:localStrategy');
 
 export default function localStrategy(){
     passport.use(
@@ -8,15 +12,39 @@ export default function localStrategy(){
                 usernameField: 'usernameSignIn',
                 passwordField: 'passwordSignIn'
             }, (username, password, done) => {
-                const user = {
-                    username,
-                    password,
-                    'name': username,
-                    'admin': false
-                };
-            console.log(user, ' -- Created USER OBJECT and sending to PASSPORT.JS')
-            done(null, user);
-        })
+                const url = 'mongodb+srv://nick:bH9cL32h7GrMHY5P@cluster0.9irb1.mongodb.net?retryWrites=true&w=majority';
+                const dbName = 'globomantics';
+
+                (async function validateUser(){
+                    let client;
+                    try {
+                        client = await MongoClient.connect(url);
+                        appDebug('Connected to mongodb app');
+                        const db = client.db(dbName);
+                        const user = await db.collection('users').findOne({ username });
+                        // If USER exists && the USERS obj password === password that came in 
+                        if(user && user.password === password){
+                            done(null, user);
+                        } else {
+                            // We DIDN'T get an error, BUT we didn't find a user either
+                            done(null, false);
+                        }
+                    } catch (error) {
+                        done(error, false);
+                    }
+                    client.close();
+                })()
+                //!! We're going to do the following later on
+                // const user = {
+                //     username,
+                //     password,
+                //     'name': username,
+                //     'admin': false
+                // };
+                // console.log(user, ' -- Created USER OBJECT and sending to PASSPORT.JS')
+                // done(null, user);
+            }
+        )
     );
 }
 
@@ -80,3 +108,18 @@ export default function localStrategy(){
     //@     };
     //@     done(null, user);
     //@ }));
+
+
+
+/// VALIDATING USERS 
+// The below block is where we get the UN and PW from Passport
+    //@ }, (username, password, done) => {
+    //@     const user = {
+    //@         username,
+    //@         password,
+    //@         'name': 'Jonathan'
+    //@     };
+    //@     done(null, user);
+    //@ }));
+
+// First we pull in MongoDB as we'll need to access this in order to validate our User
