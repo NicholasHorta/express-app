@@ -1,6 +1,9 @@
 import express from 'express';
 import debug from 'debug';
 import { MongoClient, ObjectId } from 'mongodb'
+import speakerService from '../services/speakerService';
+
+console.log(speakerService)
 
 const appDebug = debug('app:sessionRouter');
 const sessionRouter = express.Router();
@@ -48,8 +51,14 @@ sessionRouter.route('/:id')
                 appDebug(`Successfully connected MongoDB -- SESSIONS`);
                 const db = client.db(dbName);
 
-                const sessions = await db.collection('sessions').findOne({ _id: new ObjectId(id) })
-                res.render('session', { callMeAnything: sessions })
+                const session = await db.collection('sessions').findOne({ _id: new ObjectId(id) })
+
+                // Speaker Service - getSpeakerById returns a PROMISE
+                // So we can then use the await keyword as we're in an async function
+                const speaker = await speakerService.getSpeakerById(session.speakers[0].id);
+                console.log(speaker)
+                session.speaker = speaker.data;
+                res.render('session', { singleSession: session });
             } catch (error) {
                 appDebug(error.stack);
             }
