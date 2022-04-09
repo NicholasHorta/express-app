@@ -1,8 +1,6 @@
 import express from 'express';
-import sessions from '../data/sessions.json'
 import debug from 'debug';
 import { MongoClient, ObjectId } from 'mongodb'
-import chalk from 'chalk';
 
 const appDebug = debug('app:sessionRouter');
 const sessionRouter = express.Router();
@@ -59,8 +57,26 @@ sessionRouter.route('/:id')
         })();
     })
 
-
 export default sessionRouter
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /// MIDDLEWARE
 // NEXT - Is what makes this middleware, it informs the middleware to continue after success/failure 

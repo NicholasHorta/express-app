@@ -4,28 +4,38 @@ import localStrategy from './strategies/local.strategy';
 
 localStrategy();
 
-export default function passportConfig(exe) { // param can be called anything we want as it's RX app = express();
+export default function passportConfig(app) { 
     console.log('PASSPORT.JS')
-    exe.use(passport.initialize());
-    exe.use(passport.session());
+    app.use(passport.initialize());
+    app.use(passport.session());
 
-    // We want to serialize the entire USER object 
-    // Serializing - WRITING the USER object
     passport.serializeUser((user, done) => {
-        console.log(user, ' - serialize');
         done(null, user);
     })
 
-    // Deserializing will be what's handed to the session
-    // It's going to inform "Here's the user that I have" 
-    // Gives it to the COOKIE
-    // Deserialization - READING the USER object
     passport.deserializeUser((user, done) => {
-        console.log(user, ' - deserialize');
         done(null, user);
     })
-    console.log('passportConfig Function end!')
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 /// SESSIONS
@@ -55,5 +65,18 @@ export default function passportConfig(exe) { // param can be called anything we
     
 
 /// STRATEGY
-// SEE --> ./strategies/local.strategy
+// We want to serialize the entire USER object 
+// Serializing - WRITING the USER object
+    //@ passport.serializeUser((user, done) => {
+    //@     done(null, user);
+    //@ })
 
+// Deserializing will be what's handed to the session
+// It's going to inform "Here's the user that I have" 
+// Gives it to the COOKIE
+// Deserialization - READING the USER object
+    //@ passport.deserializeUser((user, done) => {
+    //@     done(null, user);
+    //@ })
+    
+//. SEE --> ./strategies/local.strategy

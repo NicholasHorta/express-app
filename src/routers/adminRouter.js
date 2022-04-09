@@ -1,7 +1,6 @@
 import express from 'express';
 import debug from 'debug';
 import { MongoClient } from 'mongodb'
-import chalk from 'chalk';
 import sessions from '../data/sessions.json'
 
 const adminRouter = express.Router();
