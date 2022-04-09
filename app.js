@@ -49,9 +49,6 @@ app.use('/auth', authRx);
 //! - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Configuration
 
 
-//| - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - Routing
-
-
 app.get('/', (req, res) => {
     res.render('index');
 })
@@ -81,9 +78,11 @@ app.listen(PORT, () => {
 // Then we provide "where" on the file system where these static files are
 // __dirname - A variable from Node that results in "Where are you running from" for files < /Users/unicompare/Desktop/Node >
 
-// app.get - Sends responses back for GET requests
-// app.use - Allows use to USE specific Middleware - USE function MUST flow in a specific order!
-// app.set - Allows us to set variables inside the context of our application
+// app.get  - Sends responses back for GET requests
+// app.use  - Allows use to USE specific Middleware - USE function MUST flow in a specific order!
+//          - Just a function, can be for the entire app, or just certain files
+//          - More info on --> sessionsRouter
+// app.set  - Allows us to set variables inside the context of our application
 
 /// PROCESS.ENV
 // process.env - What comes out of the environment 
